@@ -12,38 +12,34 @@ object LocationSdk {
     private var isInitialized = false
     private lateinit var config: SdkConfig
 
-    fun initialize(context: Context, config: SdkConfig) {
-        LocationManager.initialize(context)
-        this.config = config
+    fun initialize(context: Context, sdkConfig: SdkConfig) {
+        this.config = sdkConfig
+        LocationManager.initialize(context, sdkConfig)
         isInitialized = true
     }
 
-    fun getConfig() = this.config
-
-
-    fun isInitialized(): Boolean {
-        return isInitialized
-    }
+    fun isInitialized(): Boolean = isInitialized
 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
     fun startTracking() {
-        // Ensure SDK is initialized before proceeding
         if (!isInitialized) {
-            Log.e(
-                "LocationSDK",
-                "SDK is not initialized. Call initialize(context, configs) first."
-            )
+            Log.e("LocationSDK", "SDK is not initialized. Call initialize(context, sdkConfig) first.")
             return
         }
         LocationManager.startLocationTracking()
     }
 
-    fun stopTracking(){
+    fun stopTracking() {
+        if (!isInitialized) {
+            Log.e("LocationSDK", "SDK is not initialized. Cannot stop tracking.")
+            return
+        }
         LocationManager.stopLocationTracking()
     }
 
+    // Future implementation for a one-time location update
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
-    fun requestLocationUpdate(){
-        //TODO request one time location update
+    fun requestLocationUpdate() {
+        // TODO: Implement one-time location update logic
     }
 }

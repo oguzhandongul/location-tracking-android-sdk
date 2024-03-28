@@ -11,18 +11,20 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.oguzhandongul.locationtrackingsdk.core.LocationSdk
+import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
 
 object LocationManager {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var request: LocationRequest
+    private lateinit var config: SdkConfig
 
-    fun initialize(context: Context) {
+    fun initialize(context: Context, config: SdkConfig) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+        this.config = config
     }
 
-        @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
     fun startLocationTracking() {
         try {
             createLocationUpdates()
@@ -42,10 +44,10 @@ object LocationManager {
 
     private fun createLocationUpdates() {
         request = LocationRequest.Builder(
-            LocationSdk.getConfig().priority,
-            LocationSdk.getConfig().updateInterval
+            config.priority,
+            config.updateInterval
         ).apply {
-            setMinUpdateDistanceMeters(LocationSdk.getConfig().minUpdateDistance)
+            setMinUpdateDistanceMeters(config.minUpdateDistance)
             setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
             setWaitForAccurateLocation(true)
         }.build()
