@@ -12,6 +12,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
+import timber.log.Timber
 
 object LocationManager {
 
@@ -30,10 +31,8 @@ object LocationManager {
             createLocationUpdates()
             requestLocationUpdates()
         } catch (ex: SecurityException) {
-            Log.e(
-                "LocationSDK",
-                "Location Permissions are missing. Request and get the permissions first."
-            )
+            Timber.tag("LocationSDK")
+                .e("Location Permissions are missing. Request and get the permissions first.")
         }
     }
 
@@ -65,10 +64,8 @@ object LocationManager {
         override fun onLocationResult(locationResult: LocationResult) {
             for (location in locationResult.locations) {
                 // TODO Send location data to the Network Module
-                Log.e(
-                    "LocationSDK",
-                    "Got the result of location request."
-                )
+                Timber.tag("LocationSDK")
+                    .i("Got the result of location request." + location.latitude + " / " + location.longitude)
             }
         }
     }

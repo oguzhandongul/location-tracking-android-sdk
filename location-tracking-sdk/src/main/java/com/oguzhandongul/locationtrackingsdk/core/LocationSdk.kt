@@ -2,10 +2,10 @@ package com.oguzhandongul.locationtrackingsdk.core
 
 import android.Manifest
 import android.content.Context
-import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
 import com.oguzhandongul.locationtrackingsdk.location.LocationManager
+import timber.log.Timber
 
 object LocationSdk {
 
@@ -23,7 +23,8 @@ object LocationSdk {
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
     fun startTracking() {
         if (!isInitialized) {
-            Log.e("LocationSDK", "SDK is not initialized. Call initialize(context, sdkConfig) first.")
+            Timber.tag("LocationSDK")
+                .e("SDK is not initialized. Call initialize(context, sdkConfig) first.")
             return
         }
         LocationManager.startLocationTracking()
@@ -31,7 +32,7 @@ object LocationSdk {
 
     fun stopTracking() {
         if (!isInitialized) {
-            Log.e("LocationSDK", "SDK is not initialized. Cannot stop tracking.")
+            Timber.tag("LocationSDK").e("SDK is not initialized. Cannot stop tracking.")
             return
         }
         LocationManager.stopLocationTracking()
