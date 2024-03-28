@@ -25,7 +25,7 @@ object LocationSdk {
     fun initialize(context: Context, sdkConfig: SdkConfig) {
         this.config = sdkConfig
         val authRepository = AuthRepositoryImpl(SecurityHelper.getSharedPref(context))
-        val apiService = RetrofitHelper.getApiService()
+        val apiService = RetrofitHelper.getApiService(authRepository)
         val networkRepo = NetworkRepositoryImpl(sdkConfig, authRepository, apiService)
         LocationManager.initialize(context, sdkConfig, authRepository, networkRepo)
         isInitialized = true

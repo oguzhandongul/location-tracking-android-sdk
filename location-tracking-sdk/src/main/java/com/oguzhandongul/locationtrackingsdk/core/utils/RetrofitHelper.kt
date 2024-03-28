@@ -1,15 +1,20 @@
 package com.oguzhandongul.locationtrackingsdk.core.utils
 
 import com.oguzhandongul.locationtrackingsdk.data.remote.ApiService
+import com.oguzhandongul.locationtrackingsdk.data.remote.NetworkInterceptor
+import com.oguzhandongul.locationtrackingsdk.data.remote.TokenHelper
+import com.oguzhandongul.locationtrackingsdk.domain.repository.AuthRepository
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-internal object RetrofitHelper {
+const val BACKEND_URL = "https://dummy-api-mobile.api.sandbox.bird.one/"
 
-    private const val BACKEND_URL = "https://dummy-api-mobile.api.sandbox.bird.one/"
-    private fun getRetrofit(): Retrofit {
-        val client = OkHttpClient.Builder().build()
+internal object RetrofitHelper {
+    private fun getRetrofit(authRepository: AuthRepository): Retrofit {
+        val tokenHelper = TokenHelper(authRepository)
+        val networkInterceptor = NetworkInterceptor(tokenHelper)
+        val client = OkHttpClient.Builder().addInterceptor(networkInterceptor).build()
 
         return Retrofit.Builder()
             .baseUrl(BACKEND_URL)
@@ -18,6 +23,7 @@ internal object RetrofitHelper {
             .build()
     }
 
-     fun getApiService(): ApiService = getRetrofit().create(ApiService::class.java)
+    fun getApiService(authRepository: AuthRepository): ApiService =
+        getRetrofit(authRepository).create(ApiService::class.java)
 
 }

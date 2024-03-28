@@ -9,7 +9,10 @@ class DemoApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        LocationSdk.initialize(this, SdkConfig())
+        LocationSdk.initialize(
+            this,
+            SdkConfig(apiKey = "xdk8ih3kvw2c66isndihzke5", debugMode = true)
+        )
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }

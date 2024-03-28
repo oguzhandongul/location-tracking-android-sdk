@@ -6,11 +6,11 @@ import com.oguzhandongul.locationtrackingsdk.domain.repository.AuthRepository
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 
-class AuthRepositoryImpl(val sharedPrefs: SharedPreferences): AuthRepository {
+class AuthRepositoryImpl(private val sharedPrefs: SharedPreferences) : AuthRepository {
 
     override fun saveTokens(tokens: TokensResponse?) {
         tokens?.let {
-           sharedPrefs.edit()
+            sharedPrefs.edit()
                 .putString("access_token", it.accessToken)
                 .putString("refresh_token", it.refreshToken)
                 .putString("expires_at", it.expiresAt)
