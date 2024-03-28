@@ -43,6 +43,8 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.security)
+    implementation(libs.androidx.datastore)
     implementation(libs.material)
     implementation(libs.android.gms)
     implementation(libs.timber)

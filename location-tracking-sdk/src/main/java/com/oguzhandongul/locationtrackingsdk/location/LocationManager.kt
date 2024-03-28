@@ -3,7 +3,6 @@ package com.oguzhandongul.locationtrackingsdk.location
 import android.Manifest
 import android.content.Context
 import android.os.Looper
-import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Granularity
