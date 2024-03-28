@@ -1,54 +1,23 @@
-package com.oguzhandongul.locationtrackingsdk.data.remote
+package com.oguzhandongul.locationtrackingsdk.data.remote.repository
 
-import android.content.Context
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
+import com.oguzhandongul.locationtrackingsdk.data.local.repository.AuthRepositoryImpl
+import com.oguzhandongul.locationtrackingsdk.data.remote.ApiService
 import com.oguzhandongul.locationtrackingsdk.data.remote.requests.LocationUpdateRequest
 import com.oguzhandongul.locationtrackingsdk.data.remote.response.TokensResponse
-import com.oguzhandongul.locationtrackingsdk.data.local.repository.AuthRepositoryImpl
+import com.oguzhandongul.locationtrackingsdk.domain.repository.NetworkRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
-import java.io.IOException
 
-object NetworkManager {
-    private lateinit var config: SdkConfig
-    private lateinit var retrofit: Retrofit
-    private lateinit var apiService: ApiService
-    private lateinit var authRepository: AuthRepositoryImpl
+class NetworkRepositoryImpl(
+    private val config: SdkConfig,
+    private val authRepository: AuthRepositoryImpl,
+    private val apiService: ApiService
+) : NetworkRepository {
 
-    private var accessToken: String? = null
-    private var refreshToken: String? = null
-
-    fun initialize(context: Context, config: SdkConfig, authRepository: AuthRepositoryImpl) {
-        this.config = config
-        this.authRepository = authRepository
-        retrofit = buildRetrofit()
-        apiService = buildApiService()
-        authenticate()
-    }
-
-    fun authenticate() {
-        getInitialTokens {
-            accessToken = it?.accessToken
-            refreshToken = it?.refreshToken
-            Timber.tag("RESULT").i("AccessToken:%s", accessToken)
-            Timber.tag("RESULT").i("RefreshToken:%s", refreshToken)
-        }
-    }
-
-    private fun buildRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(config.backendUrl)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-    }
-
-    private fun buildApiService() = retrofit.create(ApiService::class.java)
-
-    private fun getInitialTokens(onResult: (TokensResponse?) -> Unit) {
+    override fun getInitialTokens(onResult: (TokensResponse?) -> Unit) {
         val call = apiService.getNewTokens("Bearer ${config.apiKey}")
         call.enqueue(object : Callback<TokensResponse> {
             override fun onResponse(
@@ -72,7 +41,7 @@ object NetworkManager {
         })
     }
 
-    fun refreshAccessToken(refreshToken: String, onResult: (TokensResponse?) -> Unit) {
+    override fun refreshAccessToken(refreshToken: String, onResult: (TokensResponse?) -> Unit) {
         val call = apiService.refreshAccessToken("Bearer $refreshToken")
         call.enqueue(object : Callback<TokensResponse> {
             override fun onResponse(
@@ -95,7 +64,7 @@ object NetworkManager {
         })
     }
 
-    fun updateLocation(
+    override fun updateLocation(
         accessToken: String,
         locationUpdateRequest: LocationUpdateRequest,
         onResult: (Boolean) -> Unit

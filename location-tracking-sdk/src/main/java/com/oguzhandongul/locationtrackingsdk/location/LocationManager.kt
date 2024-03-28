@@ -11,9 +11,11 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
-import com.oguzhandongul.locationtrackingsdk.data.remote.NetworkManager
 import com.oguzhandongul.locationtrackingsdk.data.remote.requests.LocationUpdateRequest
 import com.oguzhandongul.locationtrackingsdk.data.local.repository.AuthRepositoryImpl
+import com.oguzhandongul.locationtrackingsdk.data.remote.repository.NetworkRepositoryImpl
+import com.oguzhandongul.locationtrackingsdk.domain.repository.AuthRepository
+import com.oguzhandongul.locationtrackingsdk.domain.repository.NetworkRepository
 import timber.log.Timber
 
 object LocationManager {
@@ -22,12 +24,14 @@ object LocationManager {
     private lateinit var requestTrack: LocationRequest
     private lateinit var requestOneTime: LocationRequest
     private lateinit var config: SdkConfig
-    private lateinit var authRepository: AuthRepositoryImpl
+    private lateinit var authRepository: AuthRepository
+    private lateinit var networkRepository: NetworkRepository
 
-    fun initialize(context: Context, config: SdkConfig,authRepository: AuthRepositoryImpl) {
+    fun initialize(context: Context, config: SdkConfig, authRepository: AuthRepositoryImpl, networkRepository: NetworkRepositoryImpl) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
         this.config = config
         this.authRepository = authRepository
+        this.networkRepository = networkRepository
     }
 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
@@ -47,7 +51,7 @@ object LocationManager {
     }
 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
-    fun updateLocationSingleTime(){
+    fun updateLocationSingleTime() {
         try {
             buildSingleLocationUpdate()
             requestSingleLocationUpdate()
@@ -100,7 +104,7 @@ object LocationManager {
             for (location in locationResult.locations) {
                 authRepository.getTokens()?.accessToken?.let {
                     val req = LocationUpdateRequest(location.longitude, location.latitude)
-                    NetworkManager.updateLocation(it, req) {
+                    networkRepository.updateLocation(it, req) {
                         Timber.tag("LocationSDK")
                             .i("Updated location: " + location.latitude + " / " + location.longitude)
                     }
@@ -116,7 +120,7 @@ object LocationManager {
             for (location in locationResult.locations) {
                 authRepository.getTokens()?.accessToken?.let {
                     val req = LocationUpdateRequest(location.longitude, location.latitude)
-                    NetworkManager.updateLocation(it, req) {
+                    networkRepository.updateLocation(it, req) {
                         Timber.tag("LocationSDK")
                             .i("One Time Updated location: " + location.latitude + " / " + location.longitude)
                     }
