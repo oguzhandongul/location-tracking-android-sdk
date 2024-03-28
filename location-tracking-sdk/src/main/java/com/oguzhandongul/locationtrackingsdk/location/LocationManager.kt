@@ -10,10 +10,10 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.oguzhandongul.locationtrackingsdk.core.SecureTokenManager
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
 import com.oguzhandongul.locationtrackingsdk.data.remote.NetworkManager
 import com.oguzhandongul.locationtrackingsdk.data.remote.requests.LocationUpdateRequest
+import com.oguzhandongul.locationtrackingsdk.data.local.repository.AuthRepositoryImpl
 import timber.log.Timber
 
 object LocationManager {
@@ -22,10 +22,12 @@ object LocationManager {
     private lateinit var requestTrack: LocationRequest
     private lateinit var requestOneTime: LocationRequest
     private lateinit var config: SdkConfig
+    private lateinit var authRepository: AuthRepositoryImpl
 
-    fun initialize(context: Context, config: SdkConfig) {
+    fun initialize(context: Context, config: SdkConfig,authRepository: AuthRepositoryImpl) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
         this.config = config
+        this.authRepository = authRepository
     }
 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
@@ -96,7 +98,7 @@ object LocationManager {
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             for (location in locationResult.locations) {
-                SecureTokenManager.getTokens()?.accessToken?.let {
+                authRepository.getTokens()?.accessToken?.let {
                     val req = LocationUpdateRequest(location.longitude, location.latitude)
                     NetworkManager.updateLocation(it, req) {
                         Timber.tag("LocationSDK")
@@ -112,7 +114,7 @@ object LocationManager {
     private val locationSingleCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             for (location in locationResult.locations) {
-                SecureTokenManager.getTokens()?.accessToken?.let {
+                authRepository.getTokens()?.accessToken?.let {
                     val req = LocationUpdateRequest(location.longitude, location.latitude)
                     NetworkManager.updateLocation(it, req) {
                         Timber.tag("LocationSDK")

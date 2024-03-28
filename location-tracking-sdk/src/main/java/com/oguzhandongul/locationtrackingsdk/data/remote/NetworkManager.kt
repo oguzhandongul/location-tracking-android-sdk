@@ -1,29 +1,36 @@
 package com.oguzhandongul.locationtrackingsdk.data.remote
 
 import android.content.Context
-import com.oguzhandongul.locationtrackingsdk.core.SecureTokenManager
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
 import com.oguzhandongul.locationtrackingsdk.data.remote.requests.LocationUpdateRequest
 import com.oguzhandongul.locationtrackingsdk.data.remote.response.TokensResponse
+import com.oguzhandongul.locationtrackingsdk.data.local.repository.AuthRepositoryImpl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
+import java.io.IOException
 
 object NetworkManager {
     private lateinit var config: SdkConfig
     private lateinit var retrofit: Retrofit
     private lateinit var apiService: ApiService
+    private lateinit var authRepository: AuthRepositoryImpl
 
     private var accessToken: String? = null
     private var refreshToken: String? = null
 
-    fun initialize(context: Context, config: SdkConfig) {
+    fun initialize(context: Context, config: SdkConfig, authRepository: AuthRepositoryImpl) {
         this.config = config
+        this.authRepository = authRepository
         retrofit = buildRetrofit()
         apiService = buildApiService()
+        authenticate()
+    }
+
+    fun authenticate() {
         getInitialTokens {
             accessToken = it?.accessToken
             refreshToken = it?.refreshToken
@@ -50,7 +57,7 @@ object NetworkManager {
             ) {
                 if (response.isSuccessful) {
                     onResult(response.body())
-                    SecureTokenManager.saveTokens(response.body())
+                    authRepository.saveTokens(response.body())
                 } else {
                     Timber.tag("NetworkManager")
                         .e("Error fetching initial tokens: %s", response.errorBody()?.string())

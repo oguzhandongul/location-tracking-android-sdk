@@ -18,6 +18,7 @@ material = "1.11.0"
 timber = "5.0.1"
 security = "1.1.0-alpha06"
 data-store = "1.0.0"
+joda-time = "2.10.14"
 
 retrofit = "2.9.0"
 retrofit-logger = "4.12.0"
@@ -47,6 +48,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 android-gms = { group = "com.google.android.gms", name = "play-services-location", version.ref = "location" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+joda-time = { group = "joda-time", name = "joda-time", version.ref = "joda-time" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 retrofit-logger = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "retrofit-logger" }

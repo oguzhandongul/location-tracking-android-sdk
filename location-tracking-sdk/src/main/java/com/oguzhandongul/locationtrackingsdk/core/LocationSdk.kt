@@ -3,8 +3,11 @@ package com.oguzhandongul.locationtrackingsdk.core
 import android.Manifest
 import android.content.Context
 import androidx.annotation.RequiresPermission
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
 import com.oguzhandongul.locationtrackingsdk.data.remote.NetworkManager
+import com.oguzhandongul.locationtrackingsdk.data.local.repository.AuthRepositoryImpl
 import com.oguzhandongul.locationtrackingsdk.location.LocationManager
 import timber.log.Timber
 
@@ -12,13 +15,33 @@ object LocationSdk {
 
     private var isInitialized = false
     private lateinit var config: SdkConfig
+    private lateinit var authRepository: AuthRepositoryImpl
+
+    private const val PREF_FILENAME = "token_prefs"
 
     fun initialize(context: Context, sdkConfig: SdkConfig) {
         this.config = sdkConfig
-        LocationManager.initialize(context, sdkConfig)
-        SecureTokenManager.initialize(context)
-        NetworkManager.initialize(context, sdkConfig,)
+        initAuthRepo(context = context)
+        LocationManager.initialize(context, sdkConfig, authRepository)
+        NetworkManager.initialize(context, sdkConfig, authRepository)
+
         isInitialized = true
+    }
+
+    private fun initAuthRepo(context: Context) {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val sharedPrefs = EncryptedSharedPreferences.create(
+            context,
+            PREF_FILENAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        authRepository = AuthRepositoryImpl(sharedPrefs)
     }
 
     fun isInitialized(): Boolean = isInitialized

@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.android.gms)
     implementation(libs.timber)
+    implementation(libs.joda.time)
 
     implementation (libs.retrofit)
     implementation (libs.retrofit.converter)
