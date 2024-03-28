@@ -1,7 +1,7 @@
 package com.oguzhandongul.locationtrackingsdk.data.local.repository
 
 import android.content.SharedPreferences
-import com.oguzhandongul.locationtrackingsdk.data.remote.response.TokensResponse
+import com.oguzhandongul.locationtrackingsdk.data.remote.models.response.TokensResponse
 import com.oguzhandongul.locationtrackingsdk.domain.repository.AuthRepository
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat

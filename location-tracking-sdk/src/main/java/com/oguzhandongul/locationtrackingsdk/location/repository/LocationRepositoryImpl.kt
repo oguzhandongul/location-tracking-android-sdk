@@ -11,7 +11,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
-import com.oguzhandongul.locationtrackingsdk.data.remote.requests.LocationUpdateRequest
+import com.oguzhandongul.locationtrackingsdk.data.remote.models.requests.LocationUpdateRequest
 import com.oguzhandongul.locationtrackingsdk.domain.repository.AuthRepository
 import com.oguzhandongul.locationtrackingsdk.domain.repository.LocationRepository
 import com.oguzhandongul.locationtrackingsdk.domain.repository.NetworkRepository

@@ -1,6 +1,6 @@
 package com.oguzhandongul.locationtrackingsdk.domain.repository
 
-import com.oguzhandongul.locationtrackingsdk.data.remote.requests.LocationUpdateRequest
+import com.oguzhandongul.locationtrackingsdk.data.remote.models.requests.LocationUpdateRequest
 
 interface NetworkRepository {
 

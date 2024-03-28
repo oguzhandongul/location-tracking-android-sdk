@@ -1,10 +1,10 @@
 package com.oguzhandongul.locationtrackingsdk.data.remote
 
+import com.oguzhandongul.locationtrackingsdk.data.remote.HttpErrorCodes.FORBIDDEN
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import java.io.IOException
 
 internal class NetworkInterceptor(
     private val tokenHelper: TokenHelper
@@ -14,7 +14,7 @@ internal class NetworkInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val response = chain.proceed(request)
-        if (response.code == CODE_UNAUTHORIZED) {
+        if (response.code == FORBIDDEN) {
             response.close()
             val newAccessToken = runBlocking { tokenHelper.refresh() }
             val newAuthRequest: Request = request.newBuilder()
@@ -23,9 +23,5 @@ internal class NetworkInterceptor(
             return chain.proceed(newAuthRequest)
         }
         return response
-    }
-
-    companion object {
-        const val CODE_UNAUTHORIZED = 403
     }
 }

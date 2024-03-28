@@ -1,7 +1,7 @@
 package com.oguzhandongul.locationtrackingsdk.data.remote
 
 import com.oguzhandongul.locationtrackingsdk.core.utils.RetrofitHelper
-import com.oguzhandongul.locationtrackingsdk.data.remote.response.TokensResponse
+import com.oguzhandongul.locationtrackingsdk.data.remote.models.response.TokensResponse
 import com.oguzhandongul.locationtrackingsdk.domain.repository.AuthRepository
 import java.io.IOException
 
