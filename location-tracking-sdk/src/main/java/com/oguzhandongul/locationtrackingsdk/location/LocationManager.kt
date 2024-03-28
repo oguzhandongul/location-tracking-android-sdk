@@ -19,7 +19,8 @@ import timber.log.Timber
 object LocationManager {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var request: LocationRequest
+    private lateinit var requestTrack: LocationRequest
+    private lateinit var requestOneTime: LocationRequest
     private lateinit var config: SdkConfig
 
     fun initialize(context: Context, config: SdkConfig) {
@@ -30,7 +31,7 @@ object LocationManager {
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
     fun startLocationTracking() {
         try {
-            createLocationUpdates()
+            buildLocationUpdates()
             requestLocationUpdates()
         } catch (ex: SecurityException) {
             Timber.tag("LocationSDK")
@@ -43,8 +44,19 @@ object LocationManager {
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
-    private fun createLocationUpdates() {
-        request = LocationRequest.Builder(
+    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    fun updateLocationSingleTime(){
+        try {
+            buildSingleLocationUpdate()
+            requestSingleLocationUpdate()
+        } catch (ex: SecurityException) {
+            Timber.tag("LocationSDK")
+                .e("Location Permissions are missing. Request and get the permissions first.")
+        }
+    }
+
+    private fun buildLocationUpdates() {
+        requestTrack = LocationRequest.Builder(
             config.priority,
             config.updateInterval
         ).apply {
@@ -54,11 +66,30 @@ object LocationManager {
         }.build()
     }
 
+    private fun buildSingleLocationUpdate() {
+        requestOneTime = LocationRequest.Builder(
+            config.priority,
+            config.updateInterval
+        ).apply {
+            setMaxUpdates(1)
+            setGranularity(Granularity.GRANULARITY_PERMISSION_LEVEL)
+            setWaitForAccurateLocation(true)
+        }.build()
+    }
+
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
     private fun requestLocationUpdates() =
         fusedLocationClient.requestLocationUpdates(
-            request,
+            requestTrack,
             locationCallback,
+            Looper.getMainLooper()
+        )
+
+    @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
+    private fun requestSingleLocationUpdate() =
+        fusedLocationClient.requestLocationUpdates(
+            requestOneTime,
+            locationSingleCallback,
             Looper.getMainLooper()
         )
 
@@ -74,6 +105,22 @@ object LocationManager {
                 }
                 Timber.tag("LocationSDK")
                     .i("Got the result of location request." + location.latitude + " / " + location.longitude)
+            }
+        }
+    }
+
+    private val locationSingleCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            for (location in locationResult.locations) {
+                SecureTokenManager.getTokens()?.accessToken?.let {
+                    val req = LocationUpdateRequest(location.longitude, location.latitude)
+                    NetworkManager.updateLocation(it, req) {
+                        Timber.tag("LocationSDK")
+                            .i("One Time Updated location: " + location.latitude + " / " + location.longitude)
+                    }
+                }
+                Timber.tag("LocationSDK")
+                    .i("One Time Got the result of location request." + location.latitude + " / " + location.longitude)
             }
         }
     }

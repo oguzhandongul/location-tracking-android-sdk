@@ -44,6 +44,6 @@ object LocationSdk {
     // Future implementation for a one-time location update
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
     fun requestLocationUpdate() {
-        // TODO: Implement one-time location update logic
+        LocationManager.updateLocationSingleTime()
     }
 }
