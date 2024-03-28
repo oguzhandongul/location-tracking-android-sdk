@@ -36,6 +36,12 @@ class MainActivity : ComponentActivity() {
         requestLocationPermission()
     }
 
+    override fun onDestroy() {
+        //Stops tracking when the application is killed
+        LocationSdk.stopTracking()
+        super.onDestroy()
+    }
+
     private fun requestLocationPermission() {
         requestPermissionLauncher.launch(
             arrayOf(
