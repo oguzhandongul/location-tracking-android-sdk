@@ -47,6 +47,10 @@ dependencies {
     implementation(libs.android.gms)
     implementation(libs.timber)
 
+    implementation (libs.retrofit)
+    implementation (libs.retrofit.converter)
+    implementation (libs.retrofit.logger)
+
     testImplementation(libs.junit)
     testImplementation(libs.mockito)
     testImplementation(libs.mockito.test)

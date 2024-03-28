@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import androidx.annotation.RequiresPermission
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
+import com.oguzhandongul.locationtrackingsdk.data.remote.NetworkManager
 import com.oguzhandongul.locationtrackingsdk.location.LocationManager
 import timber.log.Timber
 
@@ -15,6 +16,7 @@ object LocationSdk {
     fun initialize(context: Context, sdkConfig: SdkConfig) {
         this.config = sdkConfig
         LocationManager.initialize(context, sdkConfig)
+        NetworkManager.initialize(context, sdkConfig)
         isInitialized = true
     }
 
