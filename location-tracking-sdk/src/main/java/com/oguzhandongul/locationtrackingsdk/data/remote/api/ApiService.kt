@@ -1,4 +1,4 @@
-package com.oguzhandongul.locationtrackingsdk.data.remote
+package com.oguzhandongul.locationtrackingsdk.data.remote.api
 
 import com.oguzhandongul.locationtrackingsdk.data.remote.models.requests.LocationUpdateRequest
 import com.oguzhandongul.locationtrackingsdk.data.remote.models.response.TokensResponse

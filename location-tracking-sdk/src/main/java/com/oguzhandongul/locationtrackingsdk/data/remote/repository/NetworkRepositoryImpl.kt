@@ -4,8 +4,8 @@ import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
 import com.oguzhandongul.locationtrackingsdk.data.exceptions.AuthenticationFailureException
 import com.oguzhandongul.locationtrackingsdk.data.exceptions.ServerErrorException
 import com.oguzhandongul.locationtrackingsdk.data.local.repository.AuthRepositoryImpl
-import com.oguzhandongul.locationtrackingsdk.data.remote.ApiService
-import com.oguzhandongul.locationtrackingsdk.data.remote.HttpErrorCodes
+import com.oguzhandongul.locationtrackingsdk.data.remote.api.ApiService
+import com.oguzhandongul.locationtrackingsdk.data.remote.utils.HttpErrorCodes
 import com.oguzhandongul.locationtrackingsdk.data.remote.models.requests.LocationUpdateRequest
 import com.oguzhandongul.locationtrackingsdk.domain.repository.NetworkRepository
 import timber.log.Timber

@@ -1,4 +1,4 @@
-package com.oguzhandongul.locationtrackingsdk.data.remote
+package com.oguzhandongul.locationtrackingsdk.data.remote.utils
 
 object HttpErrorCodes {
     const val UNAUTHORIZED = 401

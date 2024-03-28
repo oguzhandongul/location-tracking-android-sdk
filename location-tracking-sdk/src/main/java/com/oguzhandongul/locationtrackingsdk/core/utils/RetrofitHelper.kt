@@ -1,8 +1,8 @@
 package com.oguzhandongul.locationtrackingsdk.core.utils
 
-import com.oguzhandongul.locationtrackingsdk.data.remote.ApiService
-import com.oguzhandongul.locationtrackingsdk.data.remote.NetworkInterceptor
-import com.oguzhandongul.locationtrackingsdk.data.remote.TokenHelper
+import com.oguzhandongul.locationtrackingsdk.data.remote.api.ApiService
+import com.oguzhandongul.locationtrackingsdk.data.remote.utils.NetworkInterceptor
+import com.oguzhandongul.locationtrackingsdk.data.remote.utils.TokenHelper
 import com.oguzhandongul.locationtrackingsdk.domain.repository.AuthRepository
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
