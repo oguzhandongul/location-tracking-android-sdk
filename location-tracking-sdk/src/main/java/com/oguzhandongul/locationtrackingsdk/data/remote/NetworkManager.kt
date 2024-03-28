@@ -1,6 +1,7 @@
 package com.oguzhandongul.locationtrackingsdk.data.remote
 
 import android.content.Context
+import com.oguzhandongul.locationtrackingsdk.core.SecureTokenManager
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
 import com.oguzhandongul.locationtrackingsdk.data.remote.requests.LocationUpdateRequest
 import com.oguzhandongul.locationtrackingsdk.data.remote.response.TokensResponse
@@ -31,10 +32,12 @@ object NetworkManager {
         }
     }
 
-    private fun buildRetrofit() = Retrofit.Builder()
-        .baseUrl(config.backendUrl)
-        .addConverterFactory(MoshiConverterFactory.create())
-        .build()
+    private fun buildRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(config.backendUrl)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+    }
 
     private fun buildApiService() = retrofit.create(ApiService::class.java)
 
@@ -47,6 +50,7 @@ object NetworkManager {
             ) {
                 if (response.isSuccessful) {
                     onResult(response.body())
+                    SecureTokenManager.saveTokens(response.body())
                 } else {
                     Timber.tag("NetworkManager")
                         .e("Error fetching initial tokens: %s", response.errorBody()?.string())

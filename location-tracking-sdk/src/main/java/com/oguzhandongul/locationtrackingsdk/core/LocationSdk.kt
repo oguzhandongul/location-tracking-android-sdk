@@ -16,7 +16,8 @@ object LocationSdk {
     fun initialize(context: Context, sdkConfig: SdkConfig) {
         this.config = sdkConfig
         LocationManager.initialize(context, sdkConfig)
-        NetworkManager.initialize(context, sdkConfig)
+        SecureTokenManager.initialize(context)
+        NetworkManager.initialize(context, sdkConfig,)
         isInitialized = true
     }
 

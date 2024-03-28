@@ -10,7 +10,10 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.oguzhandongul.locationtrackingsdk.core.SecureTokenManager
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
+import com.oguzhandongul.locationtrackingsdk.data.remote.NetworkManager
+import com.oguzhandongul.locationtrackingsdk.data.remote.requests.LocationUpdateRequest
 import timber.log.Timber
 
 object LocationManager {
@@ -62,7 +65,13 @@ object LocationManager {
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             for (location in locationResult.locations) {
-                // TODO Send location data to the Network Module
+                SecureTokenManager.getTokens()?.accessToken?.let {
+                    val req = LocationUpdateRequest(location.longitude, location.latitude)
+                    NetworkManager.updateLocation(it, req) {
+                        Timber.tag("LocationSDK")
+                            .i("Updated location: " + location.latitude + " / " + location.longitude)
+                    }
+                }
                 Timber.tag("LocationSDK")
                     .i("Got the result of location request." + location.latitude + " / " + location.longitude)
             }
