@@ -15,6 +15,13 @@ composeBom = "2024.03.00"
 appcompat = "1.6.1"
 location = "21.2.0"
 material = "1.11.0"
+timber = "5.0.1"
+security = "1.1.0-alpha06"
+data-store = "1.0.0"
+joda-time = "2.10.14"
+
+retrofit = "2.9.0"
+retrofit-logger = "4.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -28,6 +35,8 @@ mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref =
 kotlin-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlin-test" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-security = { group = "androidx.security", name = "security-crypto", version.ref = "security" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "data-store" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
@@ -38,6 +47,11 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 android-gms = { group = "com.google.android.gms", name = "play-services-location", version.ref = "location" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+joda-time = { group = "joda-time", name = "joda-time", version.ref = "joda-time" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+retrofit-logger = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "retrofit-logger" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

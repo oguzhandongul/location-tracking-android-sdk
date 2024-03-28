@@ -27,6 +27,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        buildConfig = true
+    }
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -40,8 +43,16 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.security)
+    implementation(libs.androidx.datastore)
     implementation(libs.material)
     implementation(libs.android.gms)
+    implementation(libs.timber)
+    implementation(libs.joda.time)
+
+    implementation (libs.retrofit)
+    implementation (libs.retrofit.converter)
+    implementation (libs.retrofit.logger)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockito)
