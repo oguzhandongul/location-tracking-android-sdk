@@ -12,7 +12,7 @@ class AuthRepositoryImpl(private val sharedPrefs: SharedPreferences) : AuthRepos
         tokens?.let {
             sharedPrefs.edit()
                 .putString("access_token", it.accessToken)
-                .putString("refresh_token", it.refreshToken)
+                .putString("refresh_token", it.refreshToken ?: it.accessToken)
                 .putString("expires_at", it.expiresAt)
                 .apply()
         }
