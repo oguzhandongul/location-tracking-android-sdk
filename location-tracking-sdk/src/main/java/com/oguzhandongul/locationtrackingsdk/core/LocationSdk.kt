@@ -9,11 +9,17 @@ import com.oguzhandongul.locationtrackingsdk.core.utils.SecurityHelper
 import com.oguzhandongul.locationtrackingsdk.data.local.repository.AuthRepositoryImpl
 import com.oguzhandongul.locationtrackingsdk.data.remote.repository.NetworkRepositoryImpl
 import com.oguzhandongul.locationtrackingsdk.location.LocationManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 object LocationSdk {
 
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var isInitialized = false
+
     private lateinit var config: SdkConfig
 
     fun initialize(context: Context, sdkConfig: SdkConfig) {
@@ -22,15 +28,13 @@ object LocationSdk {
         val apiService = RetrofitHelper.getApiService()
         val networkRepo = NetworkRepositoryImpl(sdkConfig, authRepository, apiService)
         LocationManager.initialize(context, sdkConfig, authRepository, networkRepo)
-
-        networkRepo.getInitialTokens {
-            val accessToken = it?.accessToken
-            val refreshToken = it?.refreshToken
-            Timber.tag("RESULT").i("AccessToken:%s", accessToken)
-            Timber.tag("RESULT").i("RefreshToken:%s", refreshToken)
-        }
         isInitialized = true
+
+        scope.launch {
+            networkRepo.getInitialTokens()
+        }
     }
+
 
     fun isInitialized(): Boolean = isInitialized
 
@@ -52,7 +56,6 @@ object LocationSdk {
         LocationManager.stopLocationTracking()
     }
 
-    // Future implementation for a one-time location update
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION])
     fun requestLocationUpdate() {
         LocationManager.updateLocationSingleTime()

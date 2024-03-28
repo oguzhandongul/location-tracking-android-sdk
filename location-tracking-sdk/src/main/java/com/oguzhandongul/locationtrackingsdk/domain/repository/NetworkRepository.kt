@@ -1,17 +1,15 @@
 package com.oguzhandongul.locationtrackingsdk.domain.repository
 
 import com.oguzhandongul.locationtrackingsdk.data.remote.requests.LocationUpdateRequest
-import com.oguzhandongul.locationtrackingsdk.data.remote.response.TokensResponse
 
 interface NetworkRepository {
 
-    fun getInitialTokens(onResult: (TokensResponse?) -> Unit)
+    suspend fun getInitialTokens()
 
-    fun refreshAccessToken(refreshToken: String, onResult: (TokensResponse?) -> Unit)
+    suspend fun refreshAccessToken(refreshToken: String)
 
-    fun updateLocation(
+    suspend fun updateLocation(
         accessToken: String,
-        locationUpdateRequest: LocationUpdateRequest,
-        onResult: (Boolean) -> Unit
+        locationUpdateRequest: LocationUpdateRequest
     )
 }

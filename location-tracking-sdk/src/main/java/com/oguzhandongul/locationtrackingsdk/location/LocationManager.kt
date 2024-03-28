@@ -16,9 +16,16 @@ import com.oguzhandongul.locationtrackingsdk.data.local.repository.AuthRepositor
 import com.oguzhandongul.locationtrackingsdk.data.remote.repository.NetworkRepositoryImpl
 import com.oguzhandongul.locationtrackingsdk.domain.repository.AuthRepository
 import com.oguzhandongul.locationtrackingsdk.domain.repository.NetworkRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 object LocationManager {
+
+    private val scope =
+        CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var requestTrack: LocationRequest
@@ -27,7 +34,12 @@ object LocationManager {
     private lateinit var authRepository: AuthRepository
     private lateinit var networkRepository: NetworkRepository
 
-    fun initialize(context: Context, config: SdkConfig, authRepository: AuthRepositoryImpl, networkRepository: NetworkRepositoryImpl) {
+    fun initialize(
+        context: Context,
+        config: SdkConfig,
+        authRepository: AuthRepositoryImpl,
+        networkRepository: NetworkRepositoryImpl
+    ) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
         this.config = config
         this.authRepository = authRepository
@@ -103,10 +115,9 @@ object LocationManager {
         override fun onLocationResult(locationResult: LocationResult) {
             for (location in locationResult.locations) {
                 authRepository.getTokens()?.accessToken?.let {
-                    val req = LocationUpdateRequest(location.longitude, location.latitude)
-                    networkRepository.updateLocation(it, req) {
-                        Timber.tag("LocationSDK")
-                            .i("Updated location: " + location.latitude + " / " + location.longitude)
+                    scope.launch {
+                        val req = LocationUpdateRequest(location.longitude, location.latitude)
+                        networkRepository.updateLocation(it, req)
                     }
                 }
                 Timber.tag("LocationSDK")
@@ -119,10 +130,9 @@ object LocationManager {
         override fun onLocationResult(locationResult: LocationResult) {
             for (location in locationResult.locations) {
                 authRepository.getTokens()?.accessToken?.let {
-                    val req = LocationUpdateRequest(location.longitude, location.latitude)
-                    networkRepository.updateLocation(it, req) {
-                        Timber.tag("LocationSDK")
-                            .i("One Time Updated location: " + location.latitude + " / " + location.longitude)
+                    scope.launch {
+                        val req = LocationUpdateRequest(location.longitude, location.latitude)
+                        networkRepository.updateLocation(it, req)
                     }
                 }
                 Timber.tag("LocationSDK")
