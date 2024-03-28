@@ -1,8 +1,8 @@
 package com.oguzhandongul.locationtrackingsdk.domain.repository
 
-import com.oguzhandongul.locationtrackingsdk.data.remote.response.TokensResponse
+import com.oguzhandongul.locationtrackingsdk.data.remote.models.response.TokensResponse
 
-internal interface AuthRepository {
+interface AuthRepository {
     fun saveTokens(tokens: TokensResponse?)
     fun getTokens(): TokensResponse?
     fun clearTokens()
