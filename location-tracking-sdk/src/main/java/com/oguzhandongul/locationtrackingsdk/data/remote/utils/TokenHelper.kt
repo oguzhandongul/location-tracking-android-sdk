@@ -44,7 +44,7 @@ internal class TokenHelper(private val authRepository: AuthRepository) {
             }
             return newAccessToken
         } else {
-            throw IOException("Refresh token failed")
+            throw Exception("Refresh token failed")
         }
     }
 }
