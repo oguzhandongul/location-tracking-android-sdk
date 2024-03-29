@@ -7,6 +7,7 @@ import com.oguzhandongul.locationtrackingsdk.data.local.repository.AuthRepositor
 import com.oguzhandongul.locationtrackingsdk.data.remote.api.ApiService
 import com.oguzhandongul.locationtrackingsdk.data.remote.utils.HttpErrorCodes
 import com.oguzhandongul.locationtrackingsdk.data.remote.models.requests.LocationUpdateRequest
+import com.oguzhandongul.locationtrackingsdk.data.remote.utils.Headers
 import com.oguzhandongul.locationtrackingsdk.domain.repository.NetworkRepository
 import timber.log.Timber
 
@@ -33,7 +34,7 @@ class NetworkRepositoryImpl(
      * - If unsuccessful, logs an error message.
      */
     override suspend fun getInitialTokens() {
-        val response = apiService.getNewTokens("Bearer ${config.apiKey}")
+        val response = apiService.getNewTokens("${Headers.HEADER_BEARER} ${config.apiKey}")
         if (response.isSuccessful) {
             authRepository.saveTokens(response.body())
             printTokens()
@@ -58,9 +59,10 @@ class NetworkRepositoryImpl(
     override suspend fun refreshAccessToken(
         refreshToken: String
     ) {
-        val response = apiService.refreshAccessToken("Bearer $refreshToken")
+        val response =
+            apiService.refreshAccessToken(refreshToken = "${Headers.HEADER_BEARER} $refreshToken")
         if (response.isSuccessful) {
-            authRepository.saveTokens(response.body())
+            authRepository.saveTokens(tokens = response.body())
             printTokens()
         } else {
             when (response.code()) {
@@ -83,7 +85,10 @@ class NetworkRepositoryImpl(
         accessToken: String,
         locationUpdateRequest: LocationUpdateRequest
     ) {
-        val response = apiService.updateLocation("Bearer $accessToken", locationUpdateRequest)
+        val response = apiService.updateLocation(
+            accessToken = "${Headers.HEADER_BEARER} $accessToken",
+            locationUpdateRequest = locationUpdateRequest
+        )
         if (response.isSuccessful) {
             Timber.tag("LocationSDK").i("Successfully Updated location: ")
         } else {
@@ -91,7 +96,8 @@ class NetworkRepositoryImpl(
                 HttpErrorCodes.FORBIDDEN, HttpErrorCodes.UNAUTHORIZED -> throw AuthenticationFailureException()
                 HttpErrorCodes.SERVER_ERROR -> throw ServerErrorException()
                 else -> throw Exception("Unexpected error: ${response.errorBody()?.string()}")
-            }        }
+            }
+        }
     }
 
     /**

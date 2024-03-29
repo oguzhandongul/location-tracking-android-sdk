@@ -28,7 +28,8 @@ internal class TokenHelper(private val authRepository: AuthRepository) {
     suspend fun refresh(): String {
         val refreshToken = "Bearer ${authRepository.getTokens()?.refreshToken}"
         val refreshResponse =
-            RetrofitHelper.getApiService(authRepository).refreshAccessToken(refreshToken)
+            RetrofitHelper.getApiService(authRepository = authRepository)
+                .refreshAccessToken(refreshToken = refreshToken)
 
         if (refreshResponse.isSuccessful) {
             var newAccessToken = ""
@@ -44,7 +45,7 @@ internal class TokenHelper(private val authRepository: AuthRepository) {
             }
             return newAccessToken
         } else {
-            throw IOException("Refresh token failed")
+            throw Exception("Refresh token failed")
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.oguzhandongul.locationtrackingsdk.data.remote.utils
 
+import com.oguzhandongul.locationtrackingsdk.data.remote.utils.Headers.HEADER_AUTH
+import com.oguzhandongul.locationtrackingsdk.data.remote.utils.Headers.HEADER_BEARER
 import com.oguzhandongul.locationtrackingsdk.data.remote.utils.HttpErrorCodes.FORBIDDEN
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -39,7 +41,7 @@ internal class NetworkInterceptor(
             val newAccessToken = runBlocking { tokenHelper.refresh() }
 
             val newAuthRequest: Request = request.newBuilder()
-                .header("Authorization", "Bearer $newAccessToken")
+                .header(HEADER_AUTH, "$HEADER_BEARER $newAccessToken")
                 .build()
             return chain.proceed(newAuthRequest)
         }

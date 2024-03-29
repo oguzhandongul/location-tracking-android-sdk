@@ -140,7 +140,7 @@ class LocationRepositoryImpl(
      */
     private val locationSingleCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            fusedLocationClient.removeLocationUpdates(this)//TODO check this
+            fusedLocationClient.removeLocationUpdates(this)
             for (location in locationResult.locations) {
                 authRepository.getTokens()?.accessToken?.let {
                     scope.launch {

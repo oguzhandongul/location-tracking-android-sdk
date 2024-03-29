@@ -7,17 +7,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.oguzhandongul.locationtrack.ui.theme.LocationtrackTheme
 import com.oguzhandongul.locationtrackingsdk.core.LocationSdk
+import com.oguzhandongul.locationtrackingsdk.core.extensions.askLocationPermission
 import com.oguzhandongul.locationtrackingsdk.core.extensions.hasLocationPermissions
 
 
@@ -31,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting()
+                    LocationTrackerUI()
                 }
             }
         }
@@ -71,25 +78,51 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @SuppressLint("MissingPermission")
 @Composable
-fun Greeting(modifier: Modifier = Modifier) {
+fun LocationTrackerUI() {
     val activity = LocalContext.current as Activity
-    ClickableText(
-        text = AnnotatedString("Click Here to update Location"),
-        modifier = modifier,
-        onClick = {
-            if (activity.hasLocationPermissions()) {
-                LocationSdk.requestLocationUpdate()
-            }
-        }
-    )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    LocationtrackTheme {
-        Greeting()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(
+            onClick = {
+                if (activity.hasLocationPermissions()) {
+                    LocationSdk.startTracking()
+                } else {
+                    activity.askLocationPermission()
+                }
+            }
+        ) {
+            Text("Start Tracking")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                LocationSdk.stopTracking()
+            }
+        ) {
+            Text("Stop Tracking")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(enabled = true,onClick = {if (activity.hasLocationPermissions()) {
+            LocationSdk.requestLocationUpdate()
+        } else {
+            activity.askLocationPermission()
+        }}){
+            Text("Request One Time Location Update")
+        }
+
+
     }
 }

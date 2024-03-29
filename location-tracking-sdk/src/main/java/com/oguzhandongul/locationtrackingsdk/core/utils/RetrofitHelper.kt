@@ -24,9 +24,9 @@ internal object RetrofitHelper {
      * @return A configured Retrofit instance.
      */
     private fun getRetrofit(authRepository: AuthRepository): Retrofit {
-        val tokenHelper = TokenHelper(authRepository)
+        val tokenHelper = TokenHelper(authRepository = authRepository)
         val client = OkHttpClient.Builder()
-            .addInterceptor(NetworkInterceptor(tokenHelper)) // Adds the token interceptor
+            .addInterceptor(NetworkInterceptor(tokenHelper = tokenHelper)) // Adds the token interceptor
             .build()
 
         return Retrofit.Builder()

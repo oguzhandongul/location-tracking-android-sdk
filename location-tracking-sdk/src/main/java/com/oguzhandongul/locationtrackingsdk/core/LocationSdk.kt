@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.LocationServices
 import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
+import com.oguzhandongul.locationtrackingsdk.core.utils.LocationServicesHelper
 import com.oguzhandongul.locationtrackingsdk.core.utils.RetrofitHelper
 import com.oguzhandongul.locationtrackingsdk.core.utils.SecurityHelper
 import com.oguzhandongul.locationtrackingsdk.data.local.repository.AuthRepositoryImpl
@@ -24,19 +25,26 @@ import kotlinx.coroutines.launch
 object LocationSdk {
 
     /**
+     *  SupervisorJob for handling jobs within the SDK.
+     */
+    private val locationJob = SupervisorJob()
+
+    /**
      *  CoroutineScope for handling background tasks within the SDK.
      */
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope = CoroutineScope(Dispatchers.IO + locationJob)
 
     /**
      *  Indicates whether the SDK has been initialized.
      */
     private var isInitialized = false
+    private var isTracking = false
 
     /**
      *  SDK configuration object.
      */
     private lateinit var config: SdkConfig
+    private lateinit var serviceHelper: LocationServicesHelper
 
     /**
      *  The main LocationRepository instance used for interactions with location services.
@@ -52,14 +60,26 @@ object LocationSdk {
      */
     fun initialize(context: Context, sdkConfig: SdkConfig) {
         this.config = sdkConfig
-        val authRepo = AuthRepositoryImpl(SecurityHelper.getSharedPref(context))
-        val apiService = RetrofitHelper.getApiService(authRepo)
-        val networkRepo = NetworkRepositoryImpl(sdkConfig, authRepo, apiService)
+        serviceHelper = LocationServicesHelper(context = context)
+        val authRepo = AuthRepositoryImpl(sharedPrefs = SecurityHelper.getSharedPref(context))
+        val apiService = RetrofitHelper.getApiService(authRepository = authRepo)
+        val networkRepo = NetworkRepositoryImpl(
+            config = sdkConfig,
+            authRepository = authRepo,
+            apiService = apiService
+        )
         val fusedClient = LocationServices.getFusedLocationProviderClient(context)
-        locationRepository = LocationRepositoryImpl(fusedClient, sdkConfig, authRepo, networkRepo)
+        locationRepository = LocationRepositoryImpl(
+            fusedLocationClient = fusedClient,
+            config = sdkConfig,
+            authRepository = authRepo,
+            networkRepository = networkRepo
+        )
         isInitialized = true
-        scope.launch {
-            networkRepo.getInitialTokens()
+        serviceHelper.checkServiceAvailabilities {
+            scope.launch {
+                networkRepo.getInitialTokens()
+            }
         }
     }
 
@@ -72,7 +92,10 @@ object LocationSdk {
         if (!isInitialized) {
             throw IllegalStateException("SDK is not initialized. Call initialize(context, sdkConfig) first.")
         }
-        locationRepository.startLocationTracking()
+        serviceHelper.checkServiceAvailabilities {
+            locationRepository.startLocationTracking()
+            isTracking = true
+        }
     }
 
     /**
@@ -83,7 +106,11 @@ object LocationSdk {
         if (!isInitialized) {
             throw IllegalStateException("SDK is not initialized. Cannot stop tracking.")
         }
-        locationRepository.stopLocationTracking()
+        locationJob.cancel()
+        serviceHelper.checkServiceAvailabilities {
+            locationRepository.stopLocationTracking()
+            isTracking = false
+        }
     }
 
     /**
@@ -95,6 +122,8 @@ object LocationSdk {
         if (!isInitialized) {
             throw IllegalStateException("SDK is not initialized. Call initialize(context, sdkConfig) first.")
         }
-        locationRepository.updateLocationSingleTime()
+        serviceHelper.checkServiceAvailabilities {
+            locationRepository.updateLocationSingleTime()
+        }
     }
 }
