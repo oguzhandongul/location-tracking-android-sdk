@@ -50,7 +50,11 @@ class AuthRepositoryImpl(private val sharedPrefs: SharedPreferences) : AuthRepos
         val expiresAt = sharedPrefs.getString(KEY_EXPIRES_AT, null)
 
         return if (accessToken != null && expiresAt != null && refreshToken != null) {
-            TokensResponse(accessToken, expiresAt, refreshToken)
+            TokensResponse(
+                accessToken = accessToken,
+                expiresAt = expiresAt,
+                refreshToken = refreshToken
+            )
         } else {
             null
         }

@@ -11,7 +11,13 @@ class DemoApplication : Application() {
         super.onCreate()
         LocationSdk.initialize(
             this,
-            SdkConfig(apiKey = "xdk8ih3kvw2c66isndihzke5", debugMode = true)
+            SdkConfig(
+                apiKey = "xdk8ih3kvw2c66isndihzke5",
+                debugMode = true,
+                fastestInterval = 5000L,
+                minUpdateDistance = 50F,
+                updateInterval = 5000L
+            )
         )
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

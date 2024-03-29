@@ -59,9 +59,10 @@ class NetworkRepositoryImpl(
     override suspend fun refreshAccessToken(
         refreshToken: String
     ) {
-        val response = apiService.refreshAccessToken("${Headers.HEADER_BEARER} $refreshToken")
+        val response =
+            apiService.refreshAccessToken(refreshToken = "${Headers.HEADER_BEARER} $refreshToken")
         if (response.isSuccessful) {
-            authRepository.saveTokens(response.body())
+            authRepository.saveTokens(tokens = response.body())
             printTokens()
         } else {
             when (response.code()) {
@@ -84,7 +85,10 @@ class NetworkRepositoryImpl(
         accessToken: String,
         locationUpdateRequest: LocationUpdateRequest
     ) {
-        val response = apiService.updateLocation("${Headers.HEADER_BEARER} $accessToken", locationUpdateRequest)
+        val response = apiService.updateLocation(
+            accessToken = "${Headers.HEADER_BEARER} $accessToken",
+            locationUpdateRequest = locationUpdateRequest
+        )
         if (response.isSuccessful) {
             Timber.tag("LocationSDK").i("Successfully Updated location: ")
         } else {
@@ -92,7 +96,8 @@ class NetworkRepositoryImpl(
                 HttpErrorCodes.FORBIDDEN, HttpErrorCodes.UNAUTHORIZED -> throw AuthenticationFailureException()
                 HttpErrorCodes.SERVER_ERROR -> throw ServerErrorException()
                 else -> throw Exception("Unexpected error: ${response.errorBody()?.string()}")
-            }        }
+            }
+        }
     }
 
     /**

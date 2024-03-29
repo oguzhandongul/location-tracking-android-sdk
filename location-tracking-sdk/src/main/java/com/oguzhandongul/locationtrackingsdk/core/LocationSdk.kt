@@ -25,9 +25,14 @@ import kotlinx.coroutines.launch
 object LocationSdk {
 
     /**
+     *  SupervisorJob for handling jobs within the SDK.
+     */
+    private val locationJob = SupervisorJob()
+
+    /**
      *  CoroutineScope for handling background tasks within the SDK.
      */
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope = CoroutineScope(Dispatchers.IO + locationJob)
 
     /**
      *  Indicates whether the SDK has been initialized.
@@ -101,6 +106,7 @@ object LocationSdk {
         if (!isInitialized) {
             throw IllegalStateException("SDK is not initialized. Cannot stop tracking.")
         }
+        locationJob.cancel()
         serviceHelper.checkServiceAvailabilities {
             locationRepository.stopLocationTracking()
             isTracking = false
