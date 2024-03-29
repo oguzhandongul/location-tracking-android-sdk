@@ -20,11 +20,11 @@ The Location Tracking SDK for Android allows developers to easily integrate loca
 
 ``` gradle 
 dependencies {  
-    implementation 'com.oguzhandongul:locationtrackingsdk:x.y.z'
+    implementation 'io.github.oguzhandongul:locationtrackingsdk:x.y.z'
 }
 ```
 
-Replace `x.y.z` with the latest version of the Location Tracking SDK.
+Replace `x.y.z` with the latest version of the Location Tracking SDK. Current version is 1.0.0
 
 2. Ensure you have the necessary permissions in your `AndroidManifest.xml`:
 

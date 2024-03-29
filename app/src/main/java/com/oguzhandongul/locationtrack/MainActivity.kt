@@ -23,9 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.oguzhandongul.locationtrack.ui.theme.LocationtrackTheme
-import com.oguzhandongul.locationtrackingsdk.core.LocationSdk
-import com.oguzhandongul.locationtrackingsdk.core.extensions.askLocationPermission
-import com.oguzhandongul.locationtrackingsdk.core.extensions.hasLocationPermissions
+import io.github.oguzhandongul.locationtrackingsdk.core.LocationSdk
+import io.github.oguzhandongul.locationtrackingsdk.core.extensions.askLocationPermission
+import io.github.oguzhandongul.locationtrackingsdk.core.extensions.hasLocationPermissions
 
 
 class MainActivity : ComponentActivity() {

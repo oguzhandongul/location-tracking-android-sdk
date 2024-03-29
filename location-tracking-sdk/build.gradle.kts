@@ -20,7 +20,7 @@ mavenPublishing {
 
     signAllPublications()
 
-    coordinates("com.oguzhandongul",version = "1.0.0-SNAPSHOT")
+    coordinates("io.github.oguzhandongul",version = "1.0.0")
 
     pom {
         name.set("Location Tracking SDK")
@@ -50,7 +50,7 @@ mavenPublishing {
 }
 
 android {
-    namespace = "com.oguzhandongul.locationtrackingsdk"
+    namespace = "io.github.oguzhandongul.locationtrackingsdk"
     compileSdk = 34
 
     defaultConfig {

@@ -1,8 +1,8 @@
 package com.oguzhandongul.locationtrack
 
 import android.app.Application
-import com.oguzhandongul.locationtrackingsdk.core.LocationSdk
-import com.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
+import io.github.oguzhandongul.locationtrackingsdk.core.LocationSdk
+import io.github.oguzhandongul.locationtrackingsdk.core.models.SdkConfig
 import timber.log.Timber
 
 class DemoApplication : Application() {
