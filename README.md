@@ -38,20 +38,20 @@ class DemoApplication : Application() {
 	    super.onCreate()  
 	    
 	    LocationSdk.initialize(  
-	      this,  
-		  SdkConfig(  
-	          apiKey = "xdk8ih3kvw2...",  //obtain it from XXX
-			  debugMode = true,  
-		      fastestInterval = 5000L,  //in miliseconds
-			  minUpdateDistance = 50F,  //in meters
-			  updateInterval = 5000L  //in miliseconds
-		  )  
+	        this,  
+		    SdkConfig(  
+	            apiKey = "xdk8ih3kvw2...",  //obtain it from XXX
+		        debugMode = true,  
+		        fastestInterval = 5000L,  //in miliseconds
+		        minUpdateDistance = 50F,  //in meters
+		        updateInterval = 5000L  //in miliseconds
+		    )  
 	    )  
     
-    if (BuildConfig.DEBUG) {  
-        Timber.plant(Timber.DebugTree())  
-    }  
-}
+        if (BuildConfig.DEBUG) {  
+            Timber.plant(Timber.DebugTree())  
+        }  
+    }
 }  
 ```  
 
@@ -59,9 +59,18 @@ class DemoApplication : Application() {
 
 To start tracking the location, make sure you request location permissions from the user. Once granted, you can start location tracking:
 
-``` kotlin class MainActivity : ComponentActivity() {  
- override fun onCreate(savedInstanceState: Bundle?) { super.onCreate(savedInstanceState) // Setup your UI here requestLocationPermission() }  
- private fun requestLocationPermission() { // Request location permissions and handle the result LocationSdk.startLocationTracking() }}  
+``` kotlin 
+class MainActivity : ComponentActivity() {  
+    override fun onCreate(savedInstanceState: Bundle?) { 
+        super.onCreate(savedInstanceState) 
+            requestLocationPermission() 
+        }  
+    
+    private fun requestLocationPermission() { 
+        // Request location permissions and handle the result 
+        LocationSdk.startLocationTracking() 
+    }
+}  
 ```  
 
 To request an on-demand location update:
@@ -73,7 +82,7 @@ Make sure to stop the location tracking when it's no longer needed or when your 
 
 ``` kotlin 
 override fun onDestroy() {  
-	 LocationSdk.stopTracking() super.onDestroy()
+    LocationSdk.stopTracking() super.onDestroy()
 }  
 ```   
 ## Permissions
