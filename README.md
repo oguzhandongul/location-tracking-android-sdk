@@ -18,15 +18,22 @@ The Location Tracking SDK for Android allows developers to easily integrate loca
 
 1. Add the SDK to your project's `build.gradle` file:
 
-``` gradle`dependencies {  
-implementation 'com.oguzhandongul:locationtrackingsdk:x.y.z'}` ```
+``` gradle 
+dependencies {  
+    implementation 'com.oguzhandongul:locationtrackingsdk:x.y.z'
+}
+```
 
 Replace `x.y.z` with the latest version of the Location Tracking SDK.
 
 2. Ensure you have the necessary permissions in your `AndroidManifest.xml`:
 
-``` xml`<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />  
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />` ```
+``` xml 
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />  
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> 
+```
 
 ### Initialize the SDK
 
